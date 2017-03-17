@@ -1,0 +1,29 @@
+{
+  "name": "matusaisp-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaimehrubiks/matusaisp-monitor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaimehrubiks/matusaisp-monitor/issues"
+  },
+  "homepage": "https://github.com/jaimehrubiks/matusaisp-monitor#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.1",
+    "express": "^4.15.2",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "passport-local": "^1.0.0"
+  }
+}
