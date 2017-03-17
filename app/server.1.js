@@ -1,25 +1,25 @@
 var express       = require('express'),
     cookieParser  = require('cookie-parser'),
+    //cookieSession = require('cookie-session'),
     bodyParser    = require('body-parser'),
+    //bodyParser    = require('body-parser'),
     passport      = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
-    session = require('express-session'),
-    morgan = require('morgan');
-
+    LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
 //const MongoStore = require('connect-mongo')(session);
+//var MongoClient = require('mongodb').MongoClient
+const MongoStore = require('connect-mongo')(session);
+
 var database = require('./database')
 database.connect();
 
-var sessionPwd = 'secret'
-var port = '3000'
-
 var app = express();
-
+var cookieKey = 'secret'
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    console.log(username)
     user = { username: username, password: password};
+    console.log(user.username)
     if(user.username==='admin') return done(null, user);
     else return done(null, false, { message: 'Incorrect password.' })
     /*
@@ -51,21 +51,28 @@ passport.deserializeUser(function(id, done) {
   */
 });
 
-app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser());
-app.use(session({
-  name:   'session_id',
-  keys:   [sessionPwd],
-  maxAge: 24 * 60 * 60 * 1000, // 24 hours,
-  resave: true,
-  saveUninitialized: false,
-  secret: sessionPwd
-}))
+//app.use(bodyParser());
+// app.use(cookieSession({
+//   name:   'session_id',
+//   keys:   [cookieKey],
+//   maxAge: 24 * 60 * 60 * 1000 // 24 hours 
+// }))
 
+// app.use(session({
+//     secret: cookieKey,
+//     store: new MongoStore({
+//       url: 'mongodb://localhost:27017/matusaisp',
+//       ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+//     })
+// }));
+app.use(session({secret: 'anystringoftext',
+				 saveUninitialized: true,
+				 resave: true}));
+         
 app.use(passport.initialize());
 app.use(passport.session());
+//app.use(express.methodOverride());
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
@@ -76,6 +83,9 @@ app.get('/', function (req, res) {
     res.write('user not authenticated yet, go \<a href=\'/login\'\>here\<\/a\>')
   res.end();
 });
+
+
+
 
 app.post('/login',
   passport.authenticate('local', { successRedirect: '/',
