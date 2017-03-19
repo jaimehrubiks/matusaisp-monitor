@@ -1,3 +1,9 @@
+<%
+function bytesToMBs(bytes){
+    return (bytes/1024/1024).toFixed(2)+' MBs'
+}
+%>
+
 <div class="admin">
   <h1>Web de administración</h2>
 
@@ -15,7 +21,7 @@
         <% for(var i=0; i < data.users.length; i++) { %>
           <tr>
             <td><%= data.users[i].name %></td>
-            <td><%= data.users[i].bytes + ' / ' + data.users[i].totalBytes  %></td>
+            <td><%= bytesToMBs(data.users[i].bytes) + ' / ' + bytesToMBs(data.users[i].totalBytes)  %></td>
             <td><%=  (data.users[i].bytes/data.users[i].totalBytes*100).toFixed(2) + ' %'  %></td>
             <td><%= data.users[i].active %></td>
           </tr>
@@ -35,7 +41,7 @@
             <td><%= data.networks[i].name %></td>
             <td><%= data.networks[i].address %></td>
             <td><%= data.networks[i].int  %></td>
-            <td><%= data.networks[i].bytes  %></td>
+            <td><%= bytesToMBs(data.networks[i].bytes)  %></td>
             <td><%= data.networks[i].active %></td>
           </tr>
       <% } %>
