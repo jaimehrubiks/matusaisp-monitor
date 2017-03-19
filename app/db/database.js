@@ -1,21 +1,22 @@
 var MongoClient = require( 'mongodb' ).MongoClient;
 
 var url = "mongodb://localhost/matusaisp"
-var _db;
+var db;
 
 module.exports = {
 
   connect: function( callback ) {
-    MongoClient.connect(url, function( err, db ) {
+    MongoClient.connect(url, function( err, _db ) {
       
       if(err) console.log(err)
       else{
           console.log('mongodb connected to ' + url)
-          _db = db;
+          db = _db;
       }
     } );
   },
 
-  db: _db,
+  db: function(){return db},
   url: url
+
 };

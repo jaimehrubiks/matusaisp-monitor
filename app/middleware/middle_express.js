@@ -4,12 +4,15 @@ var express       = require('express'),
     passport      = require('passport'),
     session       = require('express-session'),
     morgan        = require('morgan'),
-    sessionStore  = require('./sessionStore');
+    sessionStore  = require('./sessionStore'),
+    path          = require('path'),
+    flash         = require('connect-flash');
 
 var config = require('../config');
 
 module.exports = function(app){
 
+    app.set('views', path.join(__dirname , './../views'));
     app.use(morgan('dev'));
     app.use(cookieParser());
     app.use(bodyParser.urlencoded({ extended: false }))
@@ -22,6 +25,7 @@ module.exports = function(app){
     }))
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use(flash());
     app.use(express.static(__dirname + '/../public'));
 
 }

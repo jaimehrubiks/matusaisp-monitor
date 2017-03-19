@@ -14,6 +14,7 @@ var database = require('./db/database'),
  * Start app
 ****************************/
 database.connect();
+app.set('view engine', 'ejs')
 
 /* 
  * MiddleWare
@@ -31,6 +32,11 @@ app.use('/', require('./routes/index'));
  * WebSockets
 ****************************/
 require('./routes/io')(io);
+
+/* 
+ * UDP netflow collector
+****************************/
+require('./routes/netflow').listen(config.netflow_port);
 
 /* 
  * Listen
