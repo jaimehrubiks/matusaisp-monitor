@@ -38,7 +38,7 @@ module.exports.findNetworksByUserId = function(userid){
 module.exports.findNetworkByAddr = function(addr){
     var collection = db().collection('networks');
     return collection.findOne({
-        addr: addr
+        address: addr
     })
 }
 module.exports.incNetworkBytes = function(netname, newbytes){
@@ -64,10 +64,10 @@ module.exports.setUserBytes = function(userid, totalbytes){
 }
 module.exports.updateUserBytes = function(username){
     let userref;
-    return findUserByName(username)
+    return this.findUserByName(username)
     .then(user=>{
         userref = user;
-        return findNetworksByUserId(user._id);
+        return this.findNetworksByUserId(user._id);
     })
     .then(networks=>{
         let bytes = 0;
@@ -75,7 +75,7 @@ module.exports.updateUserBytes = function(username){
         return bytes;
     })
     .then(bytes=>{
-        return setUserBytes(userref._id, bytes);
+        return this.setUserBytes(userref._id, bytes);
     })
 }
 
