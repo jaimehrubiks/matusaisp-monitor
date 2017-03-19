@@ -42,6 +42,9 @@
       </table>
     <h3>CPU Server ussage</h3>
     <canvas id="cpu" width="400" height="100"></canvas>
+    <h3>Memory Server ussage</h3>
+    <canvas id="mem" width="400" height="100"></canvas>
+    <p id="totalmem"></p>
 
   </div>
   <div class="col-md-6">
@@ -68,7 +71,8 @@
   // Start
   genUsersCircle();
   genNetworksCircle();
-  cpuUssage();
+  var linesCpu = stats('cpu',0,100);
+  var linesMem = stats('mem',0,100);
 
   // Generate
   function genUsersCircle(){
@@ -109,7 +113,8 @@
           //options: options
       });
   }
-  function cpuUssage(){
+
+  function stats(canvas, min, max){
     var smoothie = new SmoothieChart({
       grid: { strokeStyle:'rgb(125, 0, 0)', 
               fillStyle:'rgb(60, 0, 0)',
@@ -118,50 +123,29 @@
               verticalSections: 6 },
       //labels: { fillStyle:'rgb(60, 0, 0)' }
       labels: { fontSize:14 },
-      maxValue:100,minValue:0
+      maxValue:max,minValue:min
     });
-    //smoothie.streamTo(document.getElementById("cpu"));
 
-    // Data
     line1 = new TimeSeries();
     line2 = new TimeSeries();
-    line3 = new TimeSeries();
 
-    // Add a random value to each line every second
-    // setInterval(function() {
-    //   line1.append(new Date().getTime(), Math.random());
-    //   //line2.append(new Date().getTime(), Math.random());
-    // }, 1000);
+    smoothie.streamTo(document.getElementById(canvas), 1000 /*delay*/); 
+    smoothie.addTimeSeries(line1, { strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.4)', lineWidth:3 });
+    smoothie.addTimeSeries(line2, { strokeStyle:'rgb(255, 0, 255)', lineWidth:3 });
 
-    // Add to SmoothieChart
-    smoothie.streamTo(document.getElementById("cpu"), 1000 /*delay*/); 
-    smoothie.addTimeSeries(line1,
-      { strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.4)', lineWidth:3 });
-    smoothie.addTimeSeries(line2,
-      { strokeStyle:'rgb(255, 0, 0)', fillStyle:'rgba(255, 0, 255, 0.3)', lineWidth:3 });
-    smoothie.addTimeSeries(line3,
-      { strokeStyle:'rgb(255, 0, 255)', lineWidth:3 });
+    return [line1, line2];
   }
 
-// // GET DATA
-// $.get( "/data/allusers", function( response ) {
-//   users = response;
-//   var i;
-//   for( i=0; i<users.length; i++){
-//     data.allusers_data.push(users[i].bytes);
-//     data.allusers_labels.push(users[i].name);
-//   }
-// });
 
 var socket = io('http://127.0.0.1:3000');
 
   socket.on('cpu', function(msg){
-    console.log(msg);
-    line1.append(new Date().getTime(), msg.total.user)
-    line2.append(new Date().getTime(), msg.total.sys)
-    line3.append(new Date().getTime(), msg.total.idle)
-//    $('#messages').append($('<li>').text(msg));
-    //window.scrollTo(0, document.body.scrollHeight);
+    console.log( 100 - msg.cpu );
+    linesCpu[0].append(new Date().getTime(), msg.cpu)
+    linesCpu[1].append(new Date().getTime(), 100 - msg.cpu )
+    linesMem[0].append(new Date().getTime(), 100 - msg.freemem )
+    linesCpu[1].append(new Date().getTime(), msg.freemem )
+    $("#totalmem").text("Total Memory (MB): " + msg.totalmem)
   });
   socket.on('connect', function() {
     //$('#messages').append('################## Connected ######################');

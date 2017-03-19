@@ -17,6 +17,12 @@ module.exports.findUserByName = function(username){
         name: username
     })
 }
+module.exports.findUserById = function(id){
+    var collection = db().collection('users');
+    return collection.findOne({
+        _id: id
+    })
+}
 module.exports.findNetworkByName = function(netname){
     var collection = db().collection('networks');
     return collection.findOne({
@@ -28,6 +34,12 @@ module.exports.findNetworksByUserId = function(userid){
     return collection.find({
         _user: userid
     }).toArray()
+}
+module.exports.findNetworkByAddr = function(addr){
+    var collection = db().collection('networks');
+    return collection.findOne({
+        addr: addr
+    })
 }
 module.exports.incNetworkBytes = function(netname, newbytes){
     var collection = db().collection('networks');

@@ -1,14 +1,12 @@
-var usage = require('os-usage');
+var os  = require('os-utils');
 
-var cpuMonitor = new usage.CpuMonitor({ limit: 10, delay: 2});
+var stats = {};
 
-var cpu = {};
 
-cpuMonitor.on('cpuUsage', function(data) {
-    cpu.total = data;
-})
-cpuMonitor.on('topCpuProcs', function(data) {
-    cpu.procs = data;
-})
+setInterval(function(){
+    os.cpuUsage( function(value) { stats.cpu = (value*100).toFixed(2) } );
+    stats.freemem = (os.freemem()).toFixed(2);
+    stats.totalmem = os.totalmem();
+},2500);
 
-module.exports = cpu;
+module.exports = stats;

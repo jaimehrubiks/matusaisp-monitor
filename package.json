@@ -31,6 +31,7 @@
     "morgan": "^1.8.1",
     "node-netflowv9": "^0.2.12",
     "os-usage": "0.0.3",
+    "os-utils": "0.0.14",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport.socketio": "^3.7.0",
