@@ -3,13 +3,15 @@ var dbop = require('../db/operations');
 var strtools = require('../util/strtools');
 
 var collector = Collector(function(flow){
+    console.log(flow)
     var i = 0;
     for(var i = 0; i < flow.flows.length; i++){
-        if(flow.flows[i].ipv4_dst_addr == '0.0.0.0') continue;
         let netref, com = flow.flows[i];
+        if(com.ipv4_src_addr == '0.0.0.0') continue;
 
         dbop.findNetworkByAddr( strtools.ipToNet( com.ipv4_src_addr ) )
         .then(net=>{
+            console.log(net)
             netref = net;
             return dbop.incNetworkBytes(netref.name, com.in_bytes)
         })

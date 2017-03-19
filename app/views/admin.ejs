@@ -143,10 +143,10 @@ function bytesToMBs(bytes){
   }
 
 
-var socket = io('http://127.0.0.1:3000');
+var socket = io();
 
   socket.on('cpu', function(msg){
-    console.log( 100 - msg.cpu );
+    console.log( msg );
     linesCpu[0].append(new Date().getTime(), msg.cpu)
     linesCpu[1].append(new Date().getTime(), 100 - msg.cpu )
     linesMem[0].append(new Date().getTime(), 100 - msg.freemem )
