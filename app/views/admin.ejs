@@ -149,8 +149,8 @@ var socket = io();
     console.log( msg );
     linesCpu[0].append(new Date().getTime(), msg.cpu)
     linesCpu[1].append(new Date().getTime(), 100 - msg.cpu )
-    linesMem[0].append(new Date().getTime(), 100 - msg.freemem )
-    linesCpu[1].append(new Date().getTime(), msg.freemem )
+    linesMem[1].append(new Date().getTime(), 100 - msg.freemem )
+    linesMem[0].append(new Date().getTime(), msg.freemem )
     $("#totalmem").text("Total Memory (MB): " + msg.totalmem)
   });
   socket.on('connect', function() {
