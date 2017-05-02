@@ -21,7 +21,11 @@ router.use(function(req, res, then){
 
 router.use('/data', require('./data'));
 
-router.get('/', (req, res) => {
+// router.get('/', (req, res) => {
+//     res.render('home', { user: req.user, page: '../views/slides' })
+// });
+
+router.get('/extranet', (req, res) => {
 
   if (!req.user.connected){
     var page = '../views/login'
@@ -61,13 +65,13 @@ function userLoad(req,res,username){
 }
 
 router.post('/login',
-  passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/',
+  passport.authenticate('local', { successRedirect: '/extranet',
+                                   failureRedirect: '/extranet',
                                    failureFlash: true })
 );
 router.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/');
+  res.redirect('/extranet');
 });
 
 /* Module settings */

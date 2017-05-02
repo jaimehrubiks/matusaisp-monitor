@@ -15,6 +15,7 @@ function bytesToMBs(bytes){
         <tr>
           <th>Nombre</th>
           <th>Bytes</th>
+          <th>Tarificación</th>
           <th>%</th>
           <th>Active</th>
         </tr>
@@ -22,6 +23,7 @@ function bytesToMBs(bytes){
           <tr>
             <td><%= data.users[i].name %></td>
             <td><%= bytesToMBs(data.users[i].bytes) + ' / ' + bytesToMBs(data.users[i].totalBytes)  %></td>
+            <td><%= parseInt(data.users[i].bytes/10000) + ' PYG' %></td>
             <td><%=  (data.users[i].bytes/data.users[i].totalBytes*100).toFixed(2) + ' %'  %></td>
             <td><%= data.users[i].active %></td>
           </tr>
@@ -84,7 +86,7 @@ function bytesToMBs(bytes){
   function genUsersCircle(){
       var userscircledata = {
           datasets:[{
-              data: data.users.map(function(user){ return user.bytes }),
+              data: data.users.map(function(user){ return parseInt(user.bytes/1024/1024) }),
               backgroundColor: colors,
               label: 'resumen datos usuario'
           }],
@@ -103,7 +105,7 @@ function bytesToMBs(bytes){
   function genNetworksCircle(){
       var networkscircledata = {
           datasets:[{
-              data: data.networks.map(function(net){ return net.bytes }),
+              data: data.networks.map(function(net){ return parseInt(net.bytes/1024/1024) }),
               backgroundColor: colors,
               label: 'resumen datos networks'
           }],
@@ -149,8 +151,8 @@ var socket = io();
     console.log( msg );
     linesCpu[0].append(new Date().getTime(), msg.cpu)
     linesCpu[1].append(new Date().getTime(), 100 - msg.cpu )
-    linesMem[1].append(new Date().getTime(), 100 - msg.freemem/msg.totalmem )
-    linesMem[0].append(new Date().getTime(), msg.freemem )
+    linesMem[1].append(new Date().getTime(), 100 - msg.freemem/msg.totalmem*100 )
+    linesMem[0].append(new Date().getTime(), msg.freemem/msg.totalmem*100 )
     $("#totalmem").text("Total Memory (MB): " + msg.totalmem)
   });
   socket.on('connect', function() {

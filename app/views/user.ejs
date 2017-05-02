@@ -28,6 +28,17 @@ function bytesToMBs(bytes){
             </div>
             
             <div class="form-group">
+              <label class="col-sm-2 control-label">Tarificación</label>
+              <div class="col-sm-10">
+                <p class="form-control-static"> 
+                <%= 
+                    parseInt(data.user.bytes/10000) + ' PYG'
+                     %> 
+                </p>
+              </div>
+            </div>
+            
+            <div class="form-group">
               <label class="col-sm-2 control-label">%</label>
               <div class="col-sm-10">
                 <p class="form-control-static"> <%= (data.user.bytes/data.user.totalBytes*100).toFixed(2) + ' %' %> </p>
@@ -49,6 +60,7 @@ function bytesToMBs(bytes){
           <th>Address</th>
           <th>Int</th>
           <th>Bytes</th>
+          <th>Consumo</th>
           <th>Active</th>
         </tr>
         <% for(var i=0; i < data.networks.length; i++) { %>
@@ -57,6 +69,7 @@ function bytesToMBs(bytes){
             <td><%= data.networks[i].address %></td>
             <td><%= data.networks[i].int  %></td>
             <td><%= bytesToMBs(data.networks[i].bytes)  %></td>
+            <td><%= parseInt(data.networks[i].bytes/10000) + ' PYG'  %></td>
             <td><%= data.networks[i].active %></td>
           </tr>
       <% } %>
@@ -86,7 +99,7 @@ function bytesToMBs(bytes){
   function genUsersCircle(){
       var userscircledata = {
           datasets:[{
-              data: data.users.map(function(user){ return user.bytes }),
+              data: data.users.map(function(user){ return parseInt(user.bytes/1024/1024) }),
               backgroundColor: colors,
               label: 'resumen datos usuario'
           }],
@@ -105,7 +118,7 @@ function bytesToMBs(bytes){
   function genNetworksCircle(){
       var networkscircledata = {
           datasets:[{
-              data: data.networks.map(function(net){ return net.bytes }),
+              data: data.networks.map(function(net){ return parseInt(net.bytes/1024/1024) }),
               backgroundColor: colors,
               label: 'resumen datos networks'
           }],
